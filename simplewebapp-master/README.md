@@ -12,7 +12,7 @@ POST http://localhost:8080/simplewebapp/employees/add - add employee
 
 PUT  http://localhost:8080/simplewebapp/employees/update  - update employee  
         Body
-        {"employeeId":4, "firstName":"Lara","lastName":"ksks","departamentId":2,"jobTitle":"sdsd","gender":"FEMALE","dateOfBirth":"2000-06-08"}
+        {"employeeId":4, "firstName":"Lara","lastName":"Pupkin","departamentId":2,"jobTitle":"Manager","gender":"FEMALE","dateOfBirth":"2000-06-08"}
         
 DELETE http://localhost:8080/simplewebapp/employees/delete/1 - delete employee by id
         
