@@ -10,7 +10,6 @@ public enum Gender implements Serializable {
     FEMALE,
 	@JsonEnumDefaultValue 
 	UNKNOWN; 
-	
 }
 
 

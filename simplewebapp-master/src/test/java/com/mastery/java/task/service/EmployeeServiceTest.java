@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.mastery.java.task.config.AppConfiguration;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.dto.Gender;
+import com.mastery.java.task.service.exceptions.EmptyResultDataAccessException;
 
 
 @RunWith(SpringRunner.class)
@@ -50,6 +51,6 @@ public class EmployeeServiceTest {
 	@Test
 	public void TestServiceDelete() {
 		employeeService.delete(5L);
-		assertEquals(null, employeeService.getEmployeeById(3L));
+		assertEquals(null, employeeService.getEmployeeById(5L));
 	}	
 }

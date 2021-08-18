@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mastery.java.task.dao.DaoDbFunctions;
+import com.mastery.java.task.service.exceptions.EmptyResultDataAccessException;
+import com.mastery.java.task.service.exceptions.ExistsEmployeeException;
 import com.mastery.java.task.dto.Employee;
+import com.mastery.java.task.service.exceptions.InvalidFormatException;
 
 @Service
 public class EmployeeService {
@@ -16,21 +19,19 @@ public class EmployeeService {
 	
 	public void insert(Employee employee) {
 		if(n.existEmployee(employee)) {
-			System.out.println("Exists in the db");
+			throw new ExistsEmployeeException();
 		}else {
 			if(check(employee)) {
 				n.insert(employee);
-			}else {
-				System.out.println("Invalid format");
 			}
 		}
 	}
 	
 	public void delete(Long id) {
 		if(n.existEmployee(id)) {
-		n.delete(id);
+			n.delete(id);
 		}else {
-			System.out.println("Employee not exists in the db");
+			throw new EmptyResultDataAccessException();
 		}
 	}
 	
@@ -38,21 +39,20 @@ public class EmployeeService {
 		if(n.existEmployee(employee)&&check(employee)) {
 			n.update(employee);
 		}else {
-			System.out.println("Employee not exists in the db or Invalid format");
+			throw new EmptyResultDataAccessException();
 		}
 	}
 	
-	public List<Employee> loadAll() {
+	public List<Employee> loadAll(){
 		List<Employee> allEmployee = n.loadAllEmployees();
 		return allEmployee;
 	}
 	
-	public Employee getEmployeeById(Long id) {
-		if(n.existEmployee(id)) {
+	public Employee getEmployeeById(Long id){
+		if(n.existEmployee(id)) { 
 			return n.findEmployeeById(id);
 		}else {
-			System.out.println("Employee not exists in the db");
-			return null;
+			throw new EmptyResultDataAccessException();
 		}
 	}
 	//check gender, date_of_birth 
@@ -62,7 +62,7 @@ public class EmployeeService {
 		if(validDate&&validGender){
 			return true;
 		}else {
-			return false;
+			throw new InvalidFormatException();
 		}
 	}
 	//check date format
