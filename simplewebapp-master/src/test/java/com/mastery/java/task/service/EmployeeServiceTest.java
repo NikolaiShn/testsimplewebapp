@@ -8,15 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.mastery.java.task.config.AppConfiguration;
+import com.mastery.java.task.Application;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.dto.Gender;
-import com.mastery.java.task.service.exceptions.EmptyResultDataAccessException;
+
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = AppConfiguration.class)
+@SpringBootTest(classes = Application.class)
 public class EmployeeServiceTest {
 	
 	@Autowired 

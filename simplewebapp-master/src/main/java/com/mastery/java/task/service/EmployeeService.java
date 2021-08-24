@@ -18,10 +18,10 @@ public class EmployeeService {
 	DaoDbFunctions n;
 	
 	public void insert(Employee employee) {
-		if(n.existEmployee(employee)) {
-			throw new ExistsEmployeeException();
-		}else {
-			if(check(employee)) {
+		if(check(employee)) {
+			if(n.existEmployee(employee)) {
+				throw new ExistsEmployeeException();
+			}else {
 				n.insert(employee);
 			}
 		}
@@ -38,7 +38,8 @@ public class EmployeeService {
 	public void update(Employee employee) {
 		if(n.existEmployee(employee)&&check(employee)) {
 			n.update(employee);
-		}else {
+		}
+		else {
 			throw new EmptyResultDataAccessException();
 		}
 	}
