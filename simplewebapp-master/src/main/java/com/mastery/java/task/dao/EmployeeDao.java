@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.SQLException;
@@ -20,13 +19,13 @@ import com.mastery.java.task.dto.Gender;
 
 
 @Repository
-public class EmployeeDao extends JdbcDaoSupport implements DaoDbFunctions{
-	@Autowired 
-    DataSource dataSource;
- 
-    @PostConstruct
-    private void initialize(){
-        setDataSource(dataSource);
+public class EmployeeDao implements DaoDbFunctions{
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
 	@Override
@@ -39,15 +38,15 @@ public class EmployeeDao extends JdbcDaoSupport implements DaoDbFunctions{
 					   + "'" + employee.getDepartmentId() + "',"
 					   + "'" + employee.getJobTitle() + "',"
 					   + "'" + employee.getGender().toString() + "',"
-					   + "'" + employee.getDateOfBirth() + "');";	
-		getJdbcTemplate().update(sql);
+					   + "'" + employee.getDateOfBirth() + "');";
+		this.jdbcTemplate.update(sql);
 			
 	}
 	
 	public void delete(long id) {
 		//delete
 		String sql = "DELETE FROM employee WHERE employee_id =" + id;
-		getJdbcTemplate().update(sql);
+		this.jdbcTemplate.update(sql);
 	}
 
 	@Override
@@ -61,13 +60,13 @@ public class EmployeeDao extends JdbcDaoSupport implements DaoDbFunctions{
 						   + " gender = '" + employee.getGender().toString() + "',"
 						   + " date_of_birth = '" + employee.getDateOfBirth() +"'"
 						   + "WHERE employee_id = '" + employee.getEmployeeId() + "'";
-		getJdbcTemplate().update(sql);
+		this.jdbcTemplate.update(sql);
 	}
 	
 	@Override
 	public List<Employee> loadAllEmployees() {
 		String sql = "SELECT * FROM employee";
-		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
+		List<Map<String, Object>> rows = this.jdbcTemplate.queryForList(sql);
 		
 		List<Employee> result = new ArrayList<Employee>();
 		for(Map<String, Object> row: rows){
@@ -87,7 +86,7 @@ public class EmployeeDao extends JdbcDaoSupport implements DaoDbFunctions{
 	@Override
 	public Employee findEmployeeById(long employee_id) {
 		String sql = "SELECT * FROM employee WHERE employee_id=" + employee_id;
-			return  getJdbcTemplate().queryForObject(sql, new RowMapper<Employee>() {
+			return  this.jdbcTemplate.queryForObject(sql, new RowMapper<Employee>() {
 			//check
 			@Override
 			public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -108,7 +107,7 @@ public class EmployeeDao extends JdbcDaoSupport implements DaoDbFunctions{
 	@Override
 	public boolean existEmployee(Employee employee) {
 		String sqlcheck = "select exists(select 1 from employee where employee_id=" + employee.getEmployeeId() + ")";
-		if (getJdbcTemplate().queryForObject(sqlcheck, Boolean.class)) {
+		if (this.jdbcTemplate.queryForObject(sqlcheck, Boolean.class)) {
 			return true;
 		}else {
 			return false;
@@ -118,7 +117,7 @@ public class EmployeeDao extends JdbcDaoSupport implements DaoDbFunctions{
 	@Override
 	public boolean existEmployee(long id) {
 		String sqlcheck = "select exists(select 1 from employee where employee_id=" + id + ")";
-		if (getJdbcTemplate().queryForObject(sqlcheck, Boolean.class)) {
+		if (this.jdbcTemplate.queryForObject(sqlcheck, Boolean.class)) {
 			return true;
 		}else {
 			return false;
